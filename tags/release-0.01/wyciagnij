@@ -1,0 +1,13 @@
+#!/usr/bin/python2.4
+
+
+import re
+
+f = open("wyniki.txt", "r")
+tekst = f.read()
+
+pdoplusa = re.compile('do.*sieci.*</td><td align.*>(.*)</td></tr>')
+print pdoplusa.findall(tekst)
+
+
+f.close()
