@@ -1,5 +1,5 @@
-#!/usr/bin/python2.4
 # -*- coding: iso-8859-2 -*-
+# $Id$
 # modu³ do wysy³ania przez www.miastoplusa.pl
 # Copyright by skrobul@batnet.pl 2005
 # Credits: sinx

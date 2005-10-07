@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-2 -*-
 # eSeMes - orange module
+# $Id$
 # Copyright by skrobul@batnet.pl 2005
 # License: BSD license
 
