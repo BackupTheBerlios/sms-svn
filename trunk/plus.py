@@ -7,7 +7,7 @@
 
 import cookielib, string, urllib, urllib2
 
-class PlusSMS:
+class PlusSMS:	#wysylanie do sieci PlusGSM
 
 	def sendsms(self):
 		baseURL='http://www.miastoplusa.pl'

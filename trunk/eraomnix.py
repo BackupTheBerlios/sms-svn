@@ -7,7 +7,7 @@
 
 import cookielib, string, urllib, urllib2
 
-class EraSMS:
+class EraSMS: #wysylanie do sieci EraOmnix
 
 	def sendsms(self):
 		baseURL='http://www.eraomnix.pl'

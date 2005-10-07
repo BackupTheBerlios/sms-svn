@@ -6,7 +6,7 @@
 
 import cookielib, string, urllib, urllib2
 
-class OrangeSMS:
+class OrangeSMS: # wysylanie do sieci Orange
 	def sendsms(self):#{{{
 		baseURLSSL='https://www.orange.pl'
 		baseURL='http://www.orange.pl'
