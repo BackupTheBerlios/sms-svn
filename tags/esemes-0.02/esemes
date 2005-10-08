@@ -1,0 +1,86 @@
+#!/usr/bin/python2.4
+# -*- coding: iso-8859-2 -*-
+# $Id$
+# Script: eSeMeS
+# Copyright by skrobul@batnet.pl 2005
+# Credits: sinx
+# License: BSD license
+
+#--- Ustawienia ---#
+login_plus = ''		# www.miastoplusa.pl login
+pass_plus = ''			  # www.miastoplusa.pl pass
+
+login_orange = ''	# www.orange.pl login
+pass_orange  = ''	# www.orange.pl pass
+
+globalny_podpis = 'toja' # dla Ery i Orange (Plus dodaje sam)
+#-------------------------------------------------------------------------------------------
+
+
+from plus import PlusSMS
+from orange import OrangeSMS
+
+
+def rozpoznaj(numer):
+	try:
+		bramka = { 
+			'600' : 'Era', '602' : 'Era', '604' : 'Era', '606' : 'Era', '608' : 'Era',
+			'692' : 'Era', '694' : 'Era', '696' : 'Era', '698' : 'Era', '660' : 'Era',
+			'888' : 'Era', '889' : 'Era',
+			'601' : 'Plus', '603' : 'Plus', '605' : 'Plus', '607' : 'Plus', '691' : 'Plus', '693' : 'Plus',
+			'695' : 'Plus', '697' : 'Plus', '609' : 'Plus', '661' : 'Plus', '663' : 'Plus', '887' : 'Plus',
+			'500' : 'Orange', '501' : 'Orange', '502' : 'Orange', '503' : 'Orange', '503' : 'Orange'
+		}[numer[0:3]]
+	except KeyError:
+		bramka = ''
+		raise Exception, 'Podales bledny numer, lub numer nie jest rozpoznawany'
+	
+	return bramka
+
+#-------------------------------------------------------------------------------------------
+
+if __name__ == "__main__":
+	import sys
+
+	if len(sys.argv) < 3: #czy podano numer i tresc
+		print 'Sposób u¿ycia:', sys.argv[0], '<numer> <wiadomo¶æ>'
+		sys.exit(1)
+	
+	numer = sys.argv[1]
+	tresc = ' '.join(sys.argv[2:])
+
+	if numer.isdigit() == False or len(numer) != 9:
+		print 'Z³y numer'
+		sys.exit(1)
+			
+
+	try:
+		bramka = rozpoznaj(numer)
+	except:
+		print "Blad rozpoznawania bramki"
+		sys.exit(1)
+	
+	if bramka == "Orange":
+		sms = OrangeSMS()
+		sms.login = login_orange
+		sms.password = pass_orange
+		sms.podpis = globalny_podpis
+
+	elif bramka == "Plus":
+		sms = PlusSMS()
+		sms.login = login_plus
+		sms.password = pass_plus
+	
+	elif bramka == "Era":
+		print 'Bramka jest jeszcze nie supportowana'
+		sys.exit(1)
+
+	sms.sender = 'ja'
+	sms.number = numer
+	sms.message = tresc
+	sms.debug = 0
+
+	print 'Wysylam pod %s %s' % (numer, tresc)
+	sms.sendsms()
+
+# vim: ts=2
