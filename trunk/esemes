@@ -6,15 +6,6 @@
 # Credits: sinx
 # License: BSD license
 
-#--- Ustawienia ---#
-login_plus = ''		# www.miastoplusa.pl login
-pass_plus = ''			  # www.miastoplusa.pl pass
-
-login_orange = ''	# www.orange.pl login
-pass_orange  = ''	# www.orange.pl pass
-
-globalny_podpis = 'toja' # dla Ery i Orange (Plus dodaje sam)
-debug = False
 #-------------------------------------------------------------------------------------------
 
 
@@ -44,26 +35,32 @@ def usage():
 		print '\t-q, --quiet\tbez komunikatów'
 		print '\t-h, --help\tpomoc(to co w³a¶nie czytasz)'
 #-------------------------------------------------------------------------------------------
+def badkonfig(bramka):
+	print 'Brak konfiguracji bramki ' + bramka + ' w pliku konfiguracyjnym.'
+	print 'Szczegoly konfiguracji znajdziesz w pliku README.smsrc'
+	print 'Popraw to i sproboj ponownie...'
+#-------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-	import sys,getopt
+	import sys,getopt,os,ConfigParser
 
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "h:v", ["help", "verbose"])
 	except GetoptError:
 		usage()
 
+	debug = False
 	for o,a in opts:
 		if o in ('-v', '--verbose'):
 			debug = True
 		if o in ('-h', '--help'):
 			usage()
-			sys.exit(2)
+			sys.exit(-1)
 
 
 	if len(args) < 2: #czy podano numer i tresc
 		usage()
-		sys.exit(1)
+		sys.exit(-1)
 	
 	numer = args[0]
 	tresc = ' '.join(args[1:])
@@ -71,7 +68,7 @@ if __name__ == "__main__":
 	#Wstepne rozpoznawianie numeru
 	if numer.isdigit() == False or len(numer) != 9:
 		print 'Z³y numer'
-		sys.exit(1)
+		sys.exit(-1)
 			
 
 	try:
@@ -79,23 +76,37 @@ if __name__ == "__main__":
 	except:
 		print "Blad rozpoznawania bramki"
 		sys.exit(1)
+
+	config = ConfigParser.RawConfigParser()
+	config.read([os.path.expanduser('~/.smsrc'), '/etc/smsrc'])
+
 	
 	if bramka == "Orange":
 		sms = OrangeSMS()
-		sms.login = login_orange
-		sms.password = pass_orange
-		sms.podpis = globalny_podpis
+		try:
+			sms.login = config.get('orange', 'login')
+			sms.password = config.get('orange', 'password')
+			if config.has_option('orange', 'podpis'):
+				sms.sender = config.get('orange', 'podpis')
+			else:
+				sms.sender = ''
+		except Exception:
+			badkonfig('Orange')
+			sys.exit(-2)
 
 	elif bramka == "Plus":
 		sms = PlusSMS()
-		sms.login = login_plus
-		sms.password = pass_plus
+		try:
+			sms.login = config.get('plus', 'login')
+			sms.password = config.get('plus', 'password')
+		except Exception:
+			badkonfig('Plus')
+			sys.exit(-2)
 	
 	elif bramka == "Era":
 		print 'Bramka jest jeszcze nie supportowana'
-		sys.exit(1)
+		sys.exit(-2)
 
-	sms.sender = 'ja'
 	sms.number = numer
 	sms.message = tresc
 	sms.debug = debug

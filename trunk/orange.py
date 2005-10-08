@@ -84,7 +84,7 @@ class OrangeSMS: # wysylanie do sieci Orange
 		             '/amg/ptk/map/messagebox/formhandlers/MessageFormHandler.to': self.number,
 		             '_D:/amg/ptk/map/messagebox/formhandlers/MessageFormHandler.to': ' ',
 		             '_D:/amg/ptk/map/messagebox/formhandlers/MessageFormHandler.body': ' ',
-		             '/amg/ptk/map/messagebox/formhandlers/MessageFormHandler.body': 'Od '+self.sender+' : '+self.message,
+		             '/amg/ptk/map/messagebox/formhandlers/MessageFormHandler.body': self.sender+' : '+self.message,
 		             '/amg/ptk/map/messagebox/formhandlers/MessageFormHandler.create.x': '0',
 		             '/amg/ptk/map/messagebox/formhandlers/MessageFormHandler.create.y': '0',
 		             '_D:/amg/ptk/map/messagebox/formhandlers/MessageFormHandler.create': ' ',
@@ -109,7 +109,7 @@ class OrangeSMS: # wysylanie do sieci Orange
 		if len(smsy) == 2:
 			smsy_darmowe =  smsy[0]
 			smsy_doladowane = smsy[1];
-		if smsy_darmowe:
+		if smsy_darmowe and self.debug:
 			print 'Orange -> Zostalo: %s+%s SMS' % (smsy_darmowe, smsy_doladowane)
 				#}}}
 
