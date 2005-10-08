@@ -7,13 +7,13 @@
 # License: BSD license
 
 #--- Ustawienia ---#
-login_plus = 'sinx'		# www.miastoplusa.pl login
+login_plus = ''		# www.miastoplusa.pl login
 pass_plus = ''			  # www.miastoplusa.pl pass
 
-login_orange = 'skrobul'	# www.orange.pl login
-pass_orange  = 'wp13cwz'	# www.orange.pl pass
+login_orange = ''	# www.orange.pl login
+pass_orange  = ''	# www.orange.pl pass
 
-globalny_podpis = 'skrobul' # dla Ery i Orange (Plus dodaje sam)
+globalny_podpis = 'toja' # dla Ery i Orange (Plus dodaje sam)
 #-------------------------------------------------------------------------------------------
 
 
