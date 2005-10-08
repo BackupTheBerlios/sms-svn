@@ -102,6 +102,7 @@ class OrangeSMS: # wysylanie do sieci Orange
 		    print 'SMS not send.'
 				
 		smsy = self.zostalo(result.read())
+		smsy_darmowe = 0
 		if len(smsy) == 1:
 			smsy_darmowe =  smsy[0]
 			smsy_doladowane = 0
