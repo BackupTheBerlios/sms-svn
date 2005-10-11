@@ -12,10 +12,11 @@ zostalo = ''
 #-------------------------------------------------------------------
 class moj_redirect_handler(urllib2.HTTPRedirectHandler):
 	def http_error_302(self, req, fp, code, msg, headers):#{{{
-		import re
-		errnum = re.compile("X-ERA-error=(\d+)")
-		cost = re.compile("X-ERA-tokens=(\d+)")
-		print type(headers)
+		#import re
+		#errnum = re.compile("X-ERA-error=(\d+)")
+		#cost = re.compile("X-ERA-tokens=(\d+)")
+		#print type(headers)
+		# to be edited....
 
 #		blad = errnum.search(headers)
 #		zostalo = cost.search(headers)
