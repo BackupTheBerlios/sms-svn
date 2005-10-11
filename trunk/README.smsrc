@@ -1,6 +1,7 @@
 # przyk³adowy plik konfiguracyjny programu esemes
 # plik nale¿y umie¶ciæ w katalogu domowym jako .smsrc
 # czyli np /home/skrobul/.smsrc
+# lub C:\Documents And Settings\skrobul\.smsrc
 # przedtem nale¿y oczywi¶cie odpowiednio zmodyfikowaæ dane
 
 

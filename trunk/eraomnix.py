@@ -7,16 +7,31 @@
 
 import cookielib, string, urllib, urllib2
 
+blad = ''
+zostalo = ''
+#-------------------------------------------------------------------
+class moj_redirect_handler(urllib2.HTTPRedirectHandler):
+	def http_error_302(self, req, fp, code, msg, headers):#{{{
+		import re
+		errnum = re.compile("X-ERA-error=(\d+)")
+		cost = re.compile("X-ERA-tokens=(\d+)")
+		print type(headers)
+
+#		blad = errnum.search(headers)
+#		zostalo = cost.search(headers)
+		urllib2.HTTPRedirectHandler.http_error_302(self, req, fp, code, msg, headers)#}}}
+#-------------------------------------------------------------------
+
 class EraSMS: #wysylanie do sieci EraOmnix
 
-	def sendsms(self):
+	def sendsms(self):#{{{
 		baseURL='http://www.eraomnix.pl'
-		actionURL='http://www.eraomnix.pl/msg/api/do/tinker/sponsored'
 		cj = cookielib.CookieJar()
-		opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+		opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj), moj_redirect_handler)
 		request = urllib2.Request(baseURL + '/msg/api/do/tinker/sponsored')
 		parametry = { 'failure' : baseURL,
-									'success' : baseURL,
+									'success' : baseURL, 
+									'message' : self.message,
 									'login' : self.login,
 									'password' : self.password,
 									'number' : '48' + self.number,
@@ -30,11 +45,10 @@ class EraSMS: #wysylanie do sieci EraOmnix
 		try:
 			result = opener.open(request)
 		except IOError, e:
-#				print 'Blad http %s: %s ' % (e.reason, e.code)
-#				print e.read()
-				print 'dupa zbita'
-
-
+				if self.debug:
+					print 'Blad:' , e
+		print blad#}}}
+		
 
 
 # vim: ts=2 foldenable foldmethod=marker
