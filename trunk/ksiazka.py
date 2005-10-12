@@ -31,8 +31,8 @@ class KsiazkaTelefoniczna:
 	
 	def podajnumer(self, nazwa):
 		try:
-		 numer = self.ksiazka[nazwa]
-		 return numer
+			numer = self.ksiazka[nazwa]
+			return numer
 		except KeyError:
 			return None
 
