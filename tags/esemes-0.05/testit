@@ -1,0 +1,13 @@
+#!/usr/bin/python2.4
+
+
+from eraomnix import EraSMS
+
+sms = EraSMS()
+sms.sender = ''
+sms.number = '604191395'
+sms.message = 'test :*'
+sms.debug = 1 
+sms.login = 'dupa'
+sms.password = 'dupa'
+sms.sendsms()

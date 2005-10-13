@@ -1,0 +1,70 @@
+$Id$
+
+Wstêp
+  Program esemes s³u¿y do wysy³ania krótkich wiadomo¶ci tekstowych za pomoc±
+bramek sms do telefonów GSM. 
+  W chwili obecnej s± obs³ugiwane nastêpuj±ce bramki:
+    * MiastoPlusa
+        - numery: 601, 603, 605, 607, 609, 661, 663, 691, 693, 965, 697, 887
+    * Orange
+        - numery: 500, 501, 502, 503
+    * Era Omnix
+        - numery: 600, 602, 604, 606, 608, 660, 692, 694, 696, 698, 888, 889
+	
+  Esemes jest programem udaj±cym przegladrke internetow± i "klikj±cym" w
+  odpowienie miejsca na stronach operatorów. Zamiast mozolnie chodziæ i klikaæ
+  zmu¶my do tego program ;].
+
+Instalacja:
+  Do poprawnego dzia³ania program wymaga zainstalowango interpretera
+    * python 2.4 (ze standardowymi bibliotekami)
+    
+  Instalacja ogranicza siê do skopiowania plików znajduj±cych siê w projekcie,
+  do odpowienich katalogów w systemie. Autor, zaleca u¿ycie katalogu
+  /usr/local/bin dla plików .py ,oraz je¶li chcemy u¿yæ domy¶lnych
+  ustawieñ dla ca³ego komputera (loginy i has³a do bramek) pliku .smsrc do /etc/
+  aby dowiedzieæ siê wiêcej o tym pliku przejrzyj README.smsrc .
+
+U¿ywanie:
+  WAZNE: Plik .smsrc MUSI istnieæ!
+  Esemes pobiera numer odbniorcy oraz tre¶æ wiadomo¶ci z linii komend.
+    
+    $ esemes 605xxxxxx "tresc wiadomosci"
+    
+  program sam identyfikuje numer, i przyporzadkowuje go do odpowiedniej bramki,
+  oczywi¶cie istniej± bramki platne z których mo¿emy wysy³aæ sms-y do wszystkich
+  sieci. Esemesowi mo¿emy narzuciæ korzystanie z okre¶lonej bramki, robi sie to
+  w nastepujacy sposob:
+    
+    $ esemes --plus 602xxxxxx "tresc wiadomosci"
+  
+  Krótka wiadomo¶æ tekstowa zostanie wys³ana z bramki MiastoPlusa, pomimo faktu
+  ¿e odbiorca nale¿y do innej sieci, aby jednak wiadomo¶æ dotar³a musimy
+  posiadaæ odpowiedni± ilo¶æ punktów na koncie - czyt. jest to zale¿ne od bramki
+  operatora i nie wszystkie bramki to obs³uguj±. Innymi bramkami które mo¿na
+  wymusiæ s±:
+    * --plus
+    * --era
+    * --orange
+    
+  Program posiada tak¿e nastêpuj±ce opcje:
+  
+    -v - (verbose) czyt. ha³a¶liwy, wypisuje na ekranie co robi, je¶li co¶ nie
+         chce dzia³aæ dobrze sobie popatrzeæ co.
+ 
+    -h - (help) wy¶wietla krótk± pomoc jak poprawnie u¿ywaæ programu
+
+
+FAQ:
+  --== Brak pytañ jak do tej pory - bêdzie znajdowa³o siê w innym pliku ==--
+
+Licencja:
+  BSD - wiêcej informacji na: http://www.opensource.org/licenses/bsd-license.php
+
+Kontakt:
+  W sprawach zwi±zanych z kodem proszê, kontaktowaæ siê z
+    * Markiem Skrobackim     skrobul (at) batnet pl
+  natomiast je¶li chodzi o sprawy zwi±zane z dokumentacj± u¿ytkownika
+    * Tomaszem Gawêda	     johny_quest (at) poczta onet pl
+
+#END README
