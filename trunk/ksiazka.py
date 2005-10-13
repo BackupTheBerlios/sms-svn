@@ -9,7 +9,7 @@ class KsiazkaTelefoniczna:
 		self.przeparsuj()
 
 	def otworzplik(self, tryb):
-		bpath = os.path.expanduser('~/.smsaddr')
+		bpath = os.path.expanduser('~/.esemesaddr')
 		try:
 			self.bookfile = open(bpath, tryb)
 		except IOError:
