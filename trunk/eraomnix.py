@@ -39,7 +39,6 @@ class EraSMS: #wysylanie do sieci EraOmnix
 									'mms' : 'false'}
 
 		postdata = urllib.unquote(urllib.urlencode(parametry))
-		print postdata
 		request.add_data(postdata)
 		request.add_header('User-Agent', 'Opera/8.40 (Windows NT 5.0; U; en)')
 
@@ -48,7 +47,7 @@ class EraSMS: #wysylanie do sieci EraOmnix
 		except IOError, e:
 				if self.debug:
 					print 'Blad:' , e
-		print blad#}}}
+		#}}}
 		
 
 

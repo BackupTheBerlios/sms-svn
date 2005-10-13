@@ -11,7 +11,8 @@
 
 from plus import PlusSMS
 from orange import OrangeSMS
-#from era import EraSMS, moj_redirect_handler
+from eraomnix import EraSMS, moj_redirect_handler
+from ksiazka import KsiazkaTelefoniczna
 
 
 #-------------------------------------------------------------------------------------------
@@ -34,12 +35,19 @@ def rozpoznaj(numer):
 #-------------------------------------------------------------------------------------------
 def usage():
 		print 'Sposób u¿ycia:', sys.argv[0], '[opcje] <numer> <wiadomo¶æ>'
+		print '              ', sys.argv[0], '[opcje] <nazwa> [numer]'
+		print '\n'
 		print '\t-v, --verbose\tprogram jest bardziej wylewny'
 		print '\t-h, --help\tpomoc(to co w³a¶nie czytasz)'
 		print '\n'
 		print '\t-p, --plus\twymus korzystanie z bramki MiastoPlusa'
 		print '\t-e, --era\twymus korzystanie z bramki EraOmnix'
 		print '\t-o, --orange\twymus korzystanie z bramki Orange'
+		print '\n'
+		print '\t-a, --add <nazwa> <numer> \tdodaje do ksiazki telefonicznej'
+		print '\t-d, --del <nazwa>         \tusuwa z ksiazki telefonicznej'
+		print '\t-s, --show <nazwa>        \tpokazuje numer do kontaktu'
+		print '\n'
 #-------------------------------------------------------------------------------------------
 def badkonfig(bramka):
 	print 'Brak konfiguracji bramki ' + bramka + ' w pliku konfiguracyjnym.'
@@ -51,11 +59,13 @@ if __name__ == "__main__":
 	import sys,getopt,os,ConfigParser
 
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "h:vpeo", ["help", "verbose", "plus", "era", "orange"])
-	except GetoptError:
+		opts, args = getopt.getopt(sys.argv[1:], "h:vpeo:ads", ["help", "verbose", "plus", "era", "orange", "add", "del", "show"])
+	except getopt.GetoptError:
 		usage()
+		sys.exit(-1)
 
 	debug = False
+	bramka = False
 	for o,a in opts:
 		if o in ('-v', '--verbose'):
 			debug = True
@@ -68,19 +78,54 @@ if __name__ == "__main__":
 			bramka = 'Era'
 		if o in ('-o', '--orange'):
 			bramka = 'Orange'
+		#ksi±¿ka telefoniczna
+		if o in ('-a', '--add'): #dodawanie kontaktu
+			if len(args) == 2:
+				book = KsiazkaTelefoniczna()
+				book.dodaj(args[0],args[1])
+				book.zapisz()
+			else:
+				print 'Bledny parametr.'
+				usage()
+			sys.exit(0)
+		if o in ('-d', '--del'): # usuwanie kontaktu
+			if len(args) > 0:
+				book = KsiazkaTelefoniczna()
+				book.usun(args[0])
+				book.zapisz()
+			else:
+				print 'Bledny parametr.'
+				usage()
+			sys.exit(-1)
+		if o in ('-s', '--show'): # pokazywanie
+			if len(args) > 0:
+				book = KsiazkaTelefoniczna()
+				numerek  = book.podajnumer(args[0])
+				if book.podajnumer(args[0]):
+					print "%s => %s" % (args[0], numerek)
+				else:
+					print "Nie ma takiego numeru..."
+		sys.exit(-1)
+				
 
 
 	if len(args) < 2: #czy podano numer i tresc
 		usage()
 		sys.exit(-1)
 	
-	numer = args[0]
+	num = args[0]
 	tresc = ' '.join(args[1:])
 
 	#Wstepne rozpoznawianie numeru
-	if numer.isdigit() == False or len(numer) != 9:
-		print 'Z³y numer'
-		sys.exit(-1)
+	if num.isdigit() == False or len(num) != 9:
+		#szukamy czy nie podano wpisu z ksi±¿ki
+		book = KsiazkaTelefoniczna()
+		numer = book.podajnumer(num)
+		if not numer:
+			print 'Podano nieprawid³owy numer, lub adresat nie znajduje sie w ksi±¿ce tel.'
+			sys.exit(-1)
+	else:
+		numer = num
 			
 	if not bramka: #je¿eli nie wymuszono bramki, to rozpoznaj
 		try:
@@ -116,8 +161,13 @@ if __name__ == "__main__":
 			sys.exit(-2)
 	
 	elif bramka == "Era":
-		print 'Bramka jest jeszcze nie supportowana'
-		sys.exit(-2)
+		sms = EraSMS()
+		try:
+			sms.login = config.get('era', 'login')
+			sms.password = config.get('era', 'password')
+		except Exception:
+			badkonfig('Era')
+			sys.exit(-2)
 
 	sms.number = numer
 	sms.message = tresc

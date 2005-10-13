@@ -1,0 +1,14 @@
+#!/bin/sh
+# $Id$
+if [ "$EUID" != 0 ]; then
+	echo "Uruchamiaj skrypt z instalacyjny z roota"
+	exit;
+fi
+
+MODULEPATH="/usr/lib/python2.4"
+EXECPATH="/usr/bin/"
+install -m 705 esemes $EXECPATH
+install -m 604 orange.py $MODULEPATH
+install -m 604 eraomnix.py $MODULEPATH
+install -m 604 plus.py $MODULEPATH
+install -m 604 ksiazka.py $MODULEPATH
