@@ -22,8 +22,8 @@ Instalacja:
   Instalacja ogranicza siê do skopiowania plików znajduj±cych siê w projekcie,
   do odpowienich katalogów w systemie. Autor, zaleca u¿ycie katalogu
   /usr/local/bin dla plików .py ,oraz je¶li chcemy u¿yæ domy¶lnych
-  ustawieñ dla ca³ego komputera (loginy i has³a do bramek) pliku .smsrc do /etc/
-  aby dowiedzieæ siê wiêcej o tym pliku przejrzyj README.smsrc .
+  ustawieñ dla ca³ego komputera (loginy i has³a do bramek) pliku .esemesrc do /etc/
+  aby dowiedzieæ siê wiêcej o tym pliku przejrzyj README.esemesrc .
 
 U¿ywanie:
   WAZNE: Plik .smsrc MUSI istnieæ!
