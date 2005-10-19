@@ -24,7 +24,8 @@ def rozpoznaj(numer):
 			'888' : 'Era', '889' : 'Era',
 			'601' : 'Plus', '603' : 'Plus', '605' : 'Plus', '607' : 'Plus', '691' : 'Plus', '693' : 'Plus',
 			'695' : 'Plus', '697' : 'Plus', '609' : 'Plus', '661' : 'Plus', '663' : 'Plus', '887' : 'Plus',
-			'500' : 'Orange', '501' : 'Orange', '502' : 'Orange', '503' : 'Orange', '503' : 'Orange'
+			'500' : 'Orange', '501' : 'Orange', '502' : 'Orange', '503' : 'Orange', '504' : 'Orange',
+			'505' : 'Orange', '506' : 'Orange', '507' : 'Orange', '508' : 'Orange', '509' : 'Orange'
 		}[numer[0:3]]
 	except KeyError:
 		bramka = ''

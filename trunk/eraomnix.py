@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-2 -*-
 # $Id$
-# moduł do wysyłania przez www.miastoplusa.pl
+# moduł do wysyłania przez www.eraomnix.pl
 # Copyright by skrobul@batnet.pl 2005
 # Credits: sinx
 # License: BSD license
