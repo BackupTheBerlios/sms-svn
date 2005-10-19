@@ -4,6 +4,9 @@
 # Copyright by skrobul@batnet.pl 2005
 # License: BSD license
 
+# funkcja wysy³aj±ca smsy zosta³a napisana przez
+# Rodiona -> http://miracle7.info/orangembox.php
+
 import cookielib, string, urllib, urllib2
 
 class OrangeSMS: # wysylanie do sieci Orange
