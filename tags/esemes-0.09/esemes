@@ -1,0 +1,189 @@
+#!/usr/bin/env python2.4
+# -*- coding: iso-8859-2 -*-
+# $Id$
+# Script:eSeMeS
+# Copyright by skrobul@batnet.pl 2005
+# Credits: sinx
+# License: BSD license
+
+#-------------------------------------------------------------------------------------------
+
+
+from plus import PlusSMS
+from orange import OrangeSMS
+from eraomnix import EraSMS, moj_redirect_handler
+from ksiazka import KsiazkaTelefoniczna
+from misc import *
+
+
+#-------------------------------------------------------------------------------------------
+def rozpoznaj(numer):
+	try:
+		bramka = { 
+			'600' : 'Era', '602' : 'Era', '604' : 'Era', '606' : 'Era', '608' : 'Era',
+			'692' : 'Era', '694' : 'Era', '696' : 'Era', '698' : 'Era', '660' : 'Era',
+			'888' : 'Era', '889' : 'Era',
+			'601' : 'Plus', '603' : 'Plus', '605' : 'Plus', '607' : 'Plus', '691' : 'Plus', '693' : 'Plus',
+			'695' : 'Plus', '697' : 'Plus', '609' : 'Plus', '661' : 'Plus', '663' : 'Plus', '887' : 'Plus',
+			'500' : 'Orange', '501' : 'Orange', '502' : 'Orange', '503' : 'Orange', '504' : 'Orange',
+			'505' : 'Orange', '506' : 'Orange', '507' : 'Orange', '508' : 'Orange', '509' : 'Orange'
+		}[numer[0:3]]
+	except KeyError:
+		bramka = ''
+		raise Exception, 'Podales bledny numer, lub numer nie jest rozpoznawany'
+	
+	return bramka
+
+#-------------------------------------------------------------------------------------------
+def usage():
+		print 'Sposób u¿ycia:', sys.argv[0], '[opcje] <numer> <wiadomo¶æ>'
+		print '              ', sys.argv[0], '[opcje] <nazwa> [numer]'
+		print '\n'
+		print '\t-v, --verbose\tprogram jest bardziej wylewny'
+		print '\t-h, --help\tpomoc(to co w³a¶nie czytasz)'
+		print '\n'
+		print '\t-p, --plus\twymus korzystanie z bramki MiastoPlusa'
+		print '\t-e, --era\twymus korzystanie z bramki EraOmnix'
+		print '\t-o, --orange\twymus korzystanie z bramki Orange'
+		print '\n'
+		print '\t-a, --add <nazwa> <numer> \tdodaje do ksiazki telefonicznej'
+		print '\t-d, --del <nazwa>         \tusuwa z ksiazki telefonicznej'
+		print '\t-s, --show <nazwa>        \tpokazuje numer do kontaktu'
+		print '\n'
+		print '(c) Marek Skrobacki <skrobul@batnet.pl>'
+#-------------------------------------------------------------------------------------------
+def badkonfig(bramka):
+	print 'Brak konfiguracji bramki ' + bramka + ' w pliku konfiguracyjnym.'
+	print 'Szczegoly konfiguracji znajdziesz w pliku README.smsrc'
+	print 'Popraw to i sproboj ponownie...'
+#-------------------------------------------------------------------------------------------
+
+if __name__ == "__main__":
+	import sys,getopt,os,ConfigParser
+
+
+
+	try:
+		opts, args = getopt.getopt(sys.argv[1:], "h:vpeo:ads", ["help", "verbose", "plus", "era", "orange", "add", "del", "show"])
+	except getopt.GetoptError:
+		usage()
+		sys.exit(-1)
+
+	debug = False
+	bramka = False
+	for o,a in opts:
+		if o in ('-v', '--verbose'):
+			debug = True
+		if o in ('-h', '--help'):
+			usage()
+			sys.exit(-1)
+		if o in ('-p', '--plus'):
+			bramka = 'Plus'
+		if o in ('-e', '--era'):
+			bramka = 'Era'
+		if o in ('-o', '--orange'):
+			bramka = 'Orange'
+		#ksi±¿ka telefoniczna
+		if o in ('-a', '--add'): #dodawanie kontaktu
+			if len(args) == 2:
+				book = KsiazkaTelefoniczna()
+				book.dodaj(args[0],args[1])
+				book.zapisz()
+			else:
+				print 'Bledny parametr.'
+				usage()
+			sys.exit(0)
+		if o in ('-d', '--del'): # usuwanie kontaktu
+			if len(args) > 0:
+				book = KsiazkaTelefoniczna()
+				book.usun(args[0])
+				book.zapisz()
+			else:
+				print 'Bledny parametr.'
+				usage()
+			sys.exit(-1)
+		if o in ('-s', '--show'): # pokazywanie
+			if len(args) > 0:
+				book = KsiazkaTelefoniczna()
+				numerek  = book.podajnumer(args[0])
+				if book.podajnumer(args[0]):
+					print "%s => %s" % (args[0], numerek)
+				else:
+					print "Nie ma takiego numeru..."
+		sys.exit(-1)
+				
+
+
+	if len(args) < 2: #czy podano numer i tresc
+		usage()
+		sys.exit(-1)
+	
+	num = args[0]
+	tresc = ' '.join(args[1:])
+
+	#Wstepne rozpoznawianie numeru
+	if num.isdigit() == False or len(num) != 9:
+		#szukamy czy nie podano wpisu z ksi±¿ki
+		book = KsiazkaTelefoniczna()
+		numer = book.podajnumer(num)
+		if not numer:
+			print 'Podano nieprawid³owy numer, lub adresat nie znajduje sie w ksi±¿ce tel.'
+			sys.exit(-1)
+	else:
+		numer = num
+			
+	if not bramka: #je¿eli nie wymuszono bramki, to rozpoznaj
+		try:
+			bramka = rozpoznaj(numer)
+		except:
+			print "Blad rozpoznawania bramki"
+			sys.exit(1)
+
+	config = ConfigParser.RawConfigParser()
+	config.read([os.path.expanduser('~/.esemesrc'), '/etc/esemesrc'])
+	
+	if bramka == "Orange":
+		sms = OrangeSMS()
+		sms.maxlen = 634
+		try:
+			sms.login = config.get('orange', 'login')
+			sms.password = config.get('orange', 'password')
+			if config.has_option('orange', 'podpis'):
+				sms.sender = config.get('orange', 'podpis')
+			else:
+				sms.sender = ''
+		except Exception:
+			badkonfig('Orange')
+			sys.exit(-2)
+
+	elif bramka == "Plus":
+		sms = PlusSMS()
+		sms.maxlen = 634
+		try:
+			sms.login = config.get('plus', 'login')
+			sms.password = config.get('plus', 'password')
+		except Exception:
+			badkonfig('Plus')
+			sys.exit(-2)
+	
+	elif bramka == "Era":
+		sms = EraSMS()
+		sms.maxlen = 110
+		try:
+			sms.login = config.get('era', 'login')
+			sms.password = config.get('era', 'password')
+		except Exception:
+			badkonfig('Era')
+			sys.exit(-2)
+
+	sms.number = numer
+	sms.debug = debug
+
+	splt = Misc().podziel(tresc,sms.maxlen)
+	if debug:	
+		print 'Wysylam pod %s %s' % (numer, tresc)
+	for tresc in splt:
+		sms.message = tresc
+		sms.sendsms()
+
+# vim: ts=2
