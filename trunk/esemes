@@ -13,6 +13,7 @@ from plus import PlusSMS
 from orange import OrangeSMS
 from eraomnix import EraSMS, moj_redirect_handler
 from ksiazka import KsiazkaTelefoniczna
+from misc import *
 
 
 #-------------------------------------------------------------------------------------------
@@ -143,6 +144,7 @@ if __name__ == "__main__":
 	
 	if bramka == "Orange":
 		sms = OrangeSMS()
+		sms.maxlen = 634
 		try:
 			sms.login = config.get('orange', 'login')
 			sms.password = config.get('orange', 'password')
@@ -156,6 +158,7 @@ if __name__ == "__main__":
 
 	elif bramka == "Plus":
 		sms = PlusSMS()
+		sms.maxlen = 634
 		try:
 			sms.login = config.get('plus', 'login')
 			sms.password = config.get('plus', 'password')
@@ -165,6 +168,7 @@ if __name__ == "__main__":
 	
 	elif bramka == "Era":
 		sms = EraSMS()
+		sms.maxlen = 110
 		try:
 			sms.login = config.get('era', 'login')
 			sms.password = config.get('era', 'password')
@@ -173,11 +177,13 @@ if __name__ == "__main__":
 			sys.exit(-2)
 
 	sms.number = numer
-	sms.message = tresc
 	sms.debug = debug
 
+	splt = Misc().podziel(tresc,sms.maxlen)
 	if debug:	
 		print 'Wysylam pod %s %s' % (numer, tresc)
-	sms.sendsms()
+	for tresc in splt:
+		sms.message = tresc
+		sms.sendsms()
 
 # vim: ts=2
