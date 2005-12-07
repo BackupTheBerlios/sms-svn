@@ -110,7 +110,7 @@ if __name__ == "__main__":
 					print "%s => %s" % (args[0], numerek)
 				else:
 					print "Nie ma takiego numeru..."
-		sys.exit(-1)
+					sys.exit(-1)
 				
 
 
@@ -120,7 +120,6 @@ if __name__ == "__main__":
 	
 	num = args[0]
 	tresc = ' '.join(args[1:])
-
 	#Wstepne rozpoznawianie numeru
 	if num.isdigit() == False or len(num) != 9:
 		#szukamy czy nie podano wpisu z ksi±¿ki
@@ -181,7 +180,7 @@ if __name__ == "__main__":
 
 	splt = Misc().podziel(tresc,sms.maxlen)
 	if debug:	
-		print 'Wysylam pod %s %s' % (numer, tresc)
+		print 'Wysylam SMS pod %s %s' % (numer, tresc)
 	for tresc in splt:
 		sms.message = tresc
 		sms.sendsms()
