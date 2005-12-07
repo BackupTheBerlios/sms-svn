@@ -1,0 +1,74 @@
+# -*- coding: iso-8859-2 -*-
+# $Id$
+# modu³ do wysy³ania przez www.eraomnix.pl
+# Copyright by skrobul@batnet.pl 2005
+# Credits: sinx
+# License: BSD license
+
+import cookielib, string, urllib, urllib2
+
+#-------------------------------------------------------------------
+class moj_redirect_handler(urllib2.HTTPRedirectHandler):
+	def http_error_302(self, req, fp, code, msg, headers):#{{{
+		import re,sys
+		error = re.search("X-ERA-error=(\d+)", str(headers)).group(1)
+		if error == '1':
+			print "b³±d: 1 - awaria systemu"
+			sys.exit(-2)
+		elif error == '2':
+			print "b³±d: 2 - u¿ytkownik nieautoryzowany"
+			sys.exit(-2)
+		elif error == '3':
+			print "b³±d: 3 - dostêp zablokowany"
+			sys.exit(-2)
+		elif error == '5': 
+			print "b³±d: 5 - b³±d sk³adni"
+			sys.exit(-2)
+		elif error == '7':
+			print "b³±d: 7 - wyczerpany limit"
+			sys.exit(-2)
+		elif error == '8':
+			print "b³±d: 8 - b³êdny adres odbiorcy"
+			sys.exit(-2)
+		elif error == '9':
+			print "b³±d: 9 - wiadomo¶æ zbyt d³uga"
+			sys.exit(-2)
+		elif error == '10':
+			print "b³±d: 10 -brak wymaganej liczby ¿etonów"
+			sys.exit(-2)
+		try:
+			zetony  = re.search("X-ERA-counter=(\d+)", str(headers)).group(1)
+			print "Pozosta³o: %s wiadomo¶ci" % zetony
+		except Exception, e:
+			print e
+		urllib2.HTTPRedirectHandler.http_error_302(self, req, fp, code, msg, headers)#}}}
+#-------------------------------------------------------------------
+
+class EraSMS: #wysylanie do sieci EraOmnix
+   debug = 1
+   def sendsms(self):#{{{
+      baseURL='http://www.eraomnix.pl'
+      cj = cookielib.CookieJar()
+      opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj), moj_redirect_handler)
+      request = urllib2.Request(baseURL + '/msg/api/do/tinker/sponsored')
+      parametry = { 'failure' : baseURL,
+									'success' : baseURL, 
+									'message' : self.message,
+									'login' : self.login,
+									'password' : self.password,
+									'number' : '48' + self.number,
+									'mms' : 'false'}
+      postdata = urllib.unquote(urllib.urlencode(parametry))
+      request.add_data(postdata)
+      request.add_header('User-Agent', 'Opera/8.40 (Windows NT 5.0; U; en)')
+      
+      try:
+         result = opener.open(request)
+      except IOError, e:
+         if self.debug:
+            print 'Blad:' , e
+		#}}}
+		
+
+
+# vim: ts=2 foldenable foldmethod=marker
