@@ -10,6 +10,7 @@ import cookielib, string, urllib, urllib2
 #-------------------------------------------------------------------
 class moj_redirect_handler(urllib2.HTTPRedirectHandler):
 	def http_error_302(self, req, fp, code, msg, headers):#{{{
+		print "got response..."
 		import re,sys
 		error = re.search("X-ERA-error=(\d+)", str(headers)).group(1)
 		if error == '1':
@@ -63,7 +64,9 @@ class EraSMS: #wysylanie do sieci EraOmnix
       request.add_header('User-Agent', 'Opera/8.40 (Windows NT 5.0; U; en)')
       
       try:
-         result = opener.open(request)
+			if self.debug:
+				print "Sending request..."
+			result = opener.open(request)
       except IOError, e:
          if self.debug:
             print 'Blad:' , e

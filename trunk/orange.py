@@ -16,7 +16,6 @@ class OrangeSMS: # wysylanie do sieci Orange
 		length = 634 - len(self.message)
 		cj = cookielib.CookieJar()
 		opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-		print self.debug		
 		# orange index#{{{
 		request = urllib2.Request(baseURLSSL)
 		request.add_header('User-Agent', 'Opera/8.00 (Windows NT 5.0; U; en)')
