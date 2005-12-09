@@ -1,0 +1,16 @@
+# przyk³adowy plik konfiguracyjny programu esemes
+# plik nale¿y umie¶ciæ w katalogu domowym jako .esemesrc
+# czyli np /home/skrobul/.esemesrc
+# lub C:\Documents And Settings\skrobul\.esemesrc
+# przedtem nale¿y oczywi¶cie odpowiednio zmodyfikowaæ dane
+
+
+# konfiguracja bramki www.orange.pl
+[orange]
+login = mojlogin
+password = mojetajnehaslo
+
+# konfiguracja bramki www.miastoplusa.pl
+[plus]
+login = skrobul
+password = mojetajnehaslo
