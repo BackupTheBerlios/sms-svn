@@ -14,6 +14,7 @@ install -m 604 orange.py $MODULEPATH
 install -m 604 eraomnix.py $MODULEPATH
 install -m 604 plus.py $MODULEPATH
 install -m 604 ksiazka.py $MODULEPATH
+install -m 604 misc.py $MODULEPATH
 install -d $DOCPATH
 install -m 604 README $DOCPATH
 install -m 604 README.smsrc $DOCPATH
