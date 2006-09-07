@@ -55,7 +55,6 @@ class OrangeSMS: # wysylanie do sieci Orange
 		request = urllib2.Request(baseURLSSL + '/portal/map/map/homeo?_DARGS=/gear/static/home/login.jsp.loginFormId')
 		postdata = urllib.unquote(urllib.urlencode(parmdicta))
 		request.add_data(postdata)
-		print postdata
 		request.add_header('User-Agent', 'Opera/8.10 (Windows NT 5.0; U; en)')
 		try:
 		    result = opener.open(request)
